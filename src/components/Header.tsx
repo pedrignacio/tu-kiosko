@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
-import { useFavorites } from '../hooks/useFavorites';
 import CartSidebar from './CartSidebar';
 import ThemeToggle from './ThemeToggle';
 import MobileMenu from './MobileMenu';
 
 const Header: React.FC = () => {
     const { items } = useCart();
-    const { favorites } = useFavorites();
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     
@@ -28,19 +26,6 @@ const Header: React.FC = () => {
 
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center gap-6">
-                        {/* Botón de favoritos */}
-                        <Link 
-                            to="/favorites"
-                            className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
-                        >
-                            <span className="text-2xl">❤️</span>
-                            {favorites.length > 0 && (
-                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
-                                    {favorites.length}
-                                </span>
-                            )}
-                        </Link>
-
                         {/* Theme Toggle */}
                         <ThemeToggle />
 
@@ -60,19 +45,6 @@ const Header: React.FC = () => {
 
                     {/* Mobile Menu Button */}
                     <div className="flex md:hidden items-center gap-2">
-                        {/* Favoritos móvil */}
-                        <Link 
-                            to="/favorites"
-                            className="relative p-2"
-                        >
-                            <span className="text-2xl">❤️</span>
-                            {favorites.length > 0 && (
-                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                                    {favorites.length}
-                                </span>
-                            )}
-                        </Link>
-
                         <button 
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"

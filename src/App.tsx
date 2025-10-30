@@ -8,7 +8,6 @@ import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail';
 import OrderConfirmation from './pages/OrderConfirmation';
 import Checkout from './components/Checkout';
-import Favorites from './pages/Favorites';
 import NotFound from './pages/NotFound';
 
 const App: React.FC = () => {
@@ -47,13 +46,11 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<><Header /><div className="flex-grow"><Home /></div><Footer /></>} />
           <Route path="/product/:id" element={<><Header /><div className="flex-grow"><ProductDetail /></div><Footer /></>} />
-          <Route path="/favorites" element={<><Header /><div className="flex-grow"><Favorites /></div><Footer /></>} />
           <Route path="/checkout" element={<><Header /><div className="flex-grow"><Checkout /></div><Footer /></>} />
           <Route path="/order-confirmation" element={<><Header /><div className="flex-grow"><OrderConfirmation /></div><Footer /></>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
 
-        {/* Botón flotante scroll to top */}
         <ScrollToTop />
       </div>
     </Router>
