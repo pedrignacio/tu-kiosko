@@ -1,94 +1,106 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
+import { useFavorites } from '../hooks/useFavorites';
 import CartSidebar from './CartSidebar';
-import MobileMenu from './MobileMenu';
 import ThemeToggle from './ThemeToggle';
+import MobileMenu from './MobileMenu';
 
 const Header: React.FC = () => {
+    const { items } = useCart();
+    const { favorites } = useFavorites();
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { itemCount } = useCart();
+    
+    const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
         <>
-            <header className="bg-gray-800 dark:bg-gray-900 text-white shadow-lg sticky top-0 z-30 transition-colors duration-300">
-                <div className="container mx-auto px-4 md:px-6 py-4">
-                    <div className="flex justify-between items-center">
-                        {/* Mobile Menu Button */}
-                        <button
-                            onClick={() => setIsMobileMenuOpen(true)}
-                            className="md:hidden text-white hover:text-blue-400 transition"
-                            title="Open mobile menu"
-                        >
-                            <svg 
-                                className="w-8 h-8" 
-                                fill="none" 
-                                stroke="currentColor" 
-                                viewBox="0 0 24 24"
-                            >
-                                <path 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round" 
-                                    strokeWidth={2} 
-                                    d="M4 6h16M4 12h16M4 18h16" 
-                                />
-                            </svg>
-                        </button>
+            <header className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-40 transition-colors duration-300">
+                <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+                    {/* Logo */}
+                    <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
+                        <span className="text-3xl sm:text-4xl group-hover:scale-110 transition-transform">🛒</span>
+                        <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white smooth-transition group-hover:text-blue-500 dark:group-hover:text-blue-400">
+                            TU KIOSKO
+                        </h1>
+                    </Link>
 
-                        {/* Logo */}
-                        <Link to="/" className="text-2xl md:text-3xl font-bold hover:text-blue-400 transition">
-                            🛍️ TU KIOSKO
+                    {/* Desktop Navigation */}
+                    <div className="hidden md:flex items-center gap-6">
+                        {/* Botón de favoritos */}
+                        <Link 
+                            to="/favorites"
+                            className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
+                        >
+                            <span className="text-2xl">❤️</span>
+                            {favorites.length > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+                                    {favorites.length}
+                                </span>
+                            )}
                         </Link>
 
-                        {/* Desktop Navigation */}
-                        <nav className="hidden md:flex items-center space-x-6">
-                            <Link 
-                                to="/" 
-                                className="hover:text-blue-400 transition font-medium"
-                            >
-                                Inicio
-                            </Link>
-                            
-                            {/* Theme Toggle */}
-                            <ThemeToggle />
-                            
-                            {/* Cart Button */}
-                            <button
-                                onClick={() => setIsCartOpen(true)}
-                                className="relative hover:text-blue-400 transition font-medium flex items-center gap-2 bg-blue-600 dark:bg-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-800"
-                            >
-                                <span className="hidden sm:inline">🛒 Carrito</span>
-                                <span className="sm:hidden">🛒</span>
-                                {itemCount > 0 && (
-                                    <span className="bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold animate-pulse">
-                                        {itemCount}
-                                    </span>
-                                )}
-                            </button>
-                        </nav>
+                        {/* Theme Toggle */}
+                        <ThemeToggle />
 
-                        {/* Mobile Right Section */}
-                        <div className="md:hidden flex items-center gap-3">
-                            <ThemeToggle />
-                            <button
-                                onClick={() => setIsCartOpen(true)}
-                                className="relative bg-blue-600 dark:bg-blue-700 px-3 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-800 transition"
-                            >
-                                <span>🛒</span>
-                                {itemCount > 0 && (
-                                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold animate-pulse">
-                                        {itemCount}
-                                    </span>
-                                )}
-                            </button>
-                        </div>
+                        {/* Carrito */}
+                        <button 
+                            onClick={() => setIsCartOpen(true)}
+                            className="relative p-2 sm:p-3 bg-blue-500 dark:bg-blue-600 text-white rounded-full hover:bg-blue-600 dark:hover:bg-blue-700 smooth-transition hover:scale-110 shadow-lg"
+                        >
+                            <span className="text-xl sm:text-2xl">🛒</span>
+                            {totalItems > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center animate-bounce">
+                                    {totalItems}
+                                </span>
+                            )}
+                        </button>
+                    </div>
+
+                    {/* Mobile Menu Button */}
+                    <div className="flex md:hidden items-center gap-2">
+                        {/* Favoritos móvil */}
+                        <Link 
+                            to="/favorites"
+                            className="relative p-2"
+                        >
+                            <span className="text-2xl">❤️</span>
+                            {favorites.length > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                                    {favorites.length}
+                                </span>
+                            )}
+                        </Link>
+
+                        <button 
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
+                        >
+                            <span className="text-2xl">{isMobileMenuOpen ? '✕' : '☰'}</span>
+                        </button>
                     </div>
                 </div>
+
+                {/* Mobile Menu */}
+                <MobileMenu 
+                    isOpen={isMobileMenuOpen}
+                    onClose={() => setIsMobileMenuOpen(false)}
+                    onOpenCart={() => {
+                        setIsCartOpen(true);
+                        setIsMobileMenuOpen(false);
+                    }}
+                    cartItemsCount={totalItems}
+                />
             </header>
 
-            <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
-            <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+            {/* Cart Sidebar */}
+            {isCartOpen && (
+                <CartSidebar 
+                    isOpen={isCartOpen} 
+                    onClose={() => setIsCartOpen(false)} 
+                />
+            )}
         </>
     );
 };

@@ -4,6 +4,7 @@ import ProductList from '../components/ProductList';
 const Home: React.FC = () => {
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [sortBy, setSortBy] = useState<string>('default');
 
     const categories = [
         'Todos',
@@ -62,9 +63,35 @@ const Home: React.FC = () => {
                 ))}
             </div>
 
+            {/* Ordenamiento */}
+            <div className="mb-6 flex justify-end animate-fadeIn">
+                <div className="flex items-center gap-3">
+                    <label htmlFor="sort" className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        Ordenar por:
+                    </label>
+                    <select 
+                        id="sort"
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-medium focus:border-blue-500 focus:outline-none transition cursor-pointer"
+                    >
+                        <option value="default">Predeterminado</option>
+                        <option value="price-asc">💰 Precio: Menor a Mayor</option>
+                        <option value="price-desc">💎 Precio: Mayor a Menor</option>
+                        <option value="name-asc">🔤 Nombre: A - Z</option>
+                        <option value="name-desc">🔤 Nombre: Z - A</option>
+                        <option value="newest">🆕 Más Nuevos</option>
+                    </select>
+                </div>
+            </div>
+
             {/* Lista de productos */}
             <div className="animate-fadeIn">
-                <ProductList category={selectedCategory} searchTerm={searchTerm} />
+                <ProductList 
+                    category={selectedCategory} 
+                    searchTerm={searchTerm}
+                    sortBy={sortBy}
+                />
             </div>
         </div>
     );

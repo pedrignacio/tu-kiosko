@@ -1,20 +1,21 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 const OrderConfirmation: React.FC = () => {
-    const location = useLocation();
     const navigate = useNavigate();
+    const location = useLocation();
     const { orderId, totalAmount, customerName } = location.state || {};
 
     if (!orderId) {
         return (
             <div className="container mx-auto p-6 text-center">
-                <h1 className="text-3xl font-bold mb-4">No hay información del pedido</h1>
+                <h1 className="text-3xl font-bold mb-4 dark:text-white">No hay información de pedido</h1>
                 <button 
                     onClick={() => navigate('/')}
                     className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600"
                 >
-                    Volver a la tienda
+                    Ir a la tienda
                 </button>
             </div>
         );
@@ -22,62 +23,49 @@ const OrderConfirmation: React.FC = () => {
 
     return (
         <div className="container mx-auto p-6 max-w-2xl">
+            {/* Breadcrumbs */}
+            <Breadcrumbs 
+                items={[
+                    { label: '🏠 Inicio', path: '/' },
+                    { label: '🛒 Carrito' },
+                    { label: '💳 Checkout' },
+                    { label: '✅ Confirmación' }
+                ]}
+            />
+
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
                 {/* Icono de éxito */}
-                <div className="mb-6">
-                    <div className="w-24 h-24 bg-green-100 rounded-full mx-auto flex items-center justify-center">
+                <div className="mb-6 animate-bounce-slow">
+                    <div className="w-24 h-24 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto">
                         <span className="text-6xl">✅</span>
                     </div>
                 </div>
 
-                {/* Título */}
+                {/* Mensaje principal */}
                 <h1 className="text-4xl font-bold text-green-600 dark:text-green-400 mb-4">
                     ¡Pedido confirmado!
                 </h1>
-
-                {/* Saludo personalizado */}
-                {customerName && (
-                    <p className="text-xl text-gray-700 dark:text-gray-300 mb-6">
-                        Gracias por tu compra, <strong>{customerName}</strong>
-                    </p>
-                )}
+                
+                <p className="text-xl text-gray-700 dark:text-gray-300 mb-6">
+                    Gracias por tu compra, <strong>{customerName}</strong>
+                </p>
 
                 {/* Detalles del pedido */}
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 mb-6">
-                    <div className="space-y-3">
-                        <div className="flex justify-between items-center border-b pb-2 border-gray-200 dark:border-gray-600">
-                            <span className="text-gray-600 dark:text-gray-300">N° de Pedido:</span>
-                            <span className="font-mono font-bold text-blue-600 dark:text-blue-400">#{orderId}</span>
-                        </div>
-                        <div className="flex justify-between items-center border-b pb-2 border-gray-200 dark:border-gray-600">
-                            <span className="text-gray-600 dark:text-gray-300">Total pagado:</span>
-                            <span className="text-2xl font-bold text-green-600 dark:text-green-400">
-                                ${totalAmount?.toLocaleString('es-CL') || '0'}
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-gray-600 dark:text-gray-300">Estado:</span>
-                            <span className="bg-yellow-100 dark:bg-yellow-200 text-yellow-800 dark:text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">
-                                En proceso
-                            </span>
-                        </div>
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 mb-6 text-left">
+                    <h2 className="text-lg font-bold mb-4 dark:text-white">Detalles del pedido</h2>
+                    <div className="space-y-2 text-gray-700 dark:text-gray-300">
+                        <p><strong>Número de pedido:</strong> #{orderId}</p>
+                        <p><strong>Total pagado:</strong> ${totalAmount?.toLocaleString('es-CL')}</p>
+                        <p><strong>Estado:</strong> <span className="text-green-600 dark:text-green-400">✓ Confirmado</span></p>
+                        <p><strong>Envío estimado:</strong> 3-5 días hábiles</p>
                     </div>
                 </div>
 
-                {/* Información adicional */}
-                <div className="bg-blue-50 dark:bg-blue-900 border-l-4 border-blue-500 dark:border-blue-400 p-4 mb-6 text-left">
-                    <p className="text-blue-800 dark:text-blue-300 font-semibold mb-2">📧 Te enviamos un correo de confirmación</p>
-                    <p className="text-blue-700 dark:text-blue-200 text-sm">
-                        Revisa tu bandeja de entrada para ver los detalles de tu pedido.
-                        Si no lo recibes, revisa tu carpeta de spam.
-                    </p>
-                </div>
-
-                <div className="bg-green-50 dark:bg-green-900 border-l-4 border-green-500 dark:border-green-400 p-4 mb-6 text-left">
-                    <p className="text-green-800 dark:text-green-300 font-semibold mb-2">🚚 Tiempo estimado de entrega</p>
-                    <p className="text-green-700 dark:text-green-200 text-sm">
-                        Tu pedido llegará en <strong>3-5 días hábiles</strong>.
-                        Te notificaremos cuando sea despachado.
+                {/* Mensaje informativo */}
+                <div className="bg-blue-50 dark:bg-blue-900 border-l-4 border-blue-500 p-4 mb-6 text-left">
+                    <p className="text-sm text-blue-800 dark:text-blue-200">
+                        📧 Te hemos enviado un correo de confirmación con los detalles de tu pedido.
+                        Si no lo recibes en los próximos minutos, revisa tu carpeta de spam.
                     </p>
                 </div>
 

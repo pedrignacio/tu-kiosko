@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useCart } from '../hooks/useCart';
+import Breadcrumbs from './Breadcrumbs';
 
 const Checkout: React.FC = () => {
     const { items, total, clearCart } = useCart();
@@ -66,11 +67,11 @@ const Checkout: React.FC = () => {
     if (items.length === 0) {
         return (
             <div className="container mx-auto p-6 text-center">
-                <h1 className="text-3xl font-bold mb-4">Carrito vacío</h1>
-                <p className="text-gray-600 mb-6">No tienes productos en tu carrito</p>
+                <h1 className="text-3xl font-bold mb-4 dark:text-white">Carrito vacío</h1>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">No tienes productos en tu carrito</p>
                 <button 
                     onClick={() => navigate('/')}
-                    className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600"
+                    className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition"
                 >
                     Ir a la tienda
                 </button>
@@ -80,15 +81,24 @@ const Checkout: React.FC = () => {
 
     return (
         <div className="container mx-auto p-6 max-w-4xl">
-            <h1 className="text-4xl font-bold mb-8">Finalizar Compra</h1>
+            {/* Breadcrumbs */}
+            <Breadcrumbs 
+                items={[
+                    { label: '🏠 Inicio', path: '/' },
+                    { label: '🛒 Carrito' },
+                    { label: '💳 Checkout' }
+                ]}
+            />
+
+            <h1 className="text-4xl font-bold mb-8 dark:text-white">Finalizar Compra</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Formulario */}
                 <div>
-                    <h2 className="text-2xl font-bold mb-4">Datos de envío</h2>
+                    <h2 className="text-2xl font-bold mb-4 dark:text-white">Datos de envío</h2>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label htmlFor="name" className="block text-sm font-medium mb-2">
+                            <label htmlFor="name" className="block text-sm font-medium mb-2 dark:text-gray-200">
                                 Nombre completo *
                             </label>
                             <input
@@ -98,12 +108,12 @@ const Checkout: React.FC = () => {
                                 placeholder="Ej: Juan Pérez"
                                 value={formData.name}
                                 onChange={(e) => setFormData({...formData, name: e.target.value})}
-                                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium mb-2">
+                            <label htmlFor="email" className="block text-sm font-medium mb-2 dark:text-gray-200">
                                 Email *
                             </label>
                             <input
@@ -113,12 +123,12 @@ const Checkout: React.FC = () => {
                                 placeholder="ejemplo@correo.com"
                                 value={formData.email}
                                 onChange={(e) => setFormData({...formData, email: e.target.value})}
-                                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="phone" className="block text-sm font-medium mb-2">
+                            <label htmlFor="phone" className="block text-sm font-medium mb-2 dark:text-gray-200">
                                 Teléfono *
                             </label>
                             <input
@@ -128,12 +138,12 @@ const Checkout: React.FC = () => {
                                 placeholder="+56 9 1234 5678"
                                 value={formData.phone}
                                 onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="address" className="block text-sm font-medium mb-2">
+                            <label htmlFor="address" className="block text-sm font-medium mb-2 dark:text-gray-200">
                                 Dirección de envío *
                             </label>
                             <textarea
@@ -142,14 +152,14 @@ const Checkout: React.FC = () => {
                                 placeholder="Calle, número, comuna, región"
                                 value={formData.address}
                                 onChange={(e) => setFormData({...formData, address: e.target.value})}
-                                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                                 rows={3}
                             />
                         </div>
 
                         <button 
                             type="submit"
-                            className="w-full bg-blue-500 text-white py-3 rounded-lg font-bold hover:bg-blue-600 transition mt-6"
+                            className="w-full bg-blue-500 text-white py-3 rounded-lg font-bold hover:bg-blue-600 transition mt-6 shadow-lg hover:shadow-xl"
                         >
                             Confirmar pedido (${finalTotal.toLocaleString('es-CL')})
                         </button>
@@ -158,37 +168,37 @@ const Checkout: React.FC = () => {
 
                 {/* Resumen */}
                 <div>
-                    <h2 className="text-2xl font-bold mb-4">Resumen del pedido</h2>
-                    <div className="bg-gray-50 rounded-lg p-6 space-y-4">
+                    <h2 className="text-2xl font-bold mb-4 dark:text-white">Resumen del pedido</h2>
+                    <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 space-y-4 border border-gray-200 dark:border-gray-700">
                         {items.map(item => (
-                            <div key={item.id} className="flex justify-between border-b pb-2">
+                            <div key={item.id} className="flex justify-between border-b border-gray-200 dark:border-gray-700 pb-2">
                                 <div>
-                                    <p className="font-medium">{item.name}</p>
-                                    <p className="text-sm text-gray-600">Cantidad: {item.quantity}</p>
+                                    <p className="font-medium dark:text-white">{item.name}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Cantidad: {item.quantity}</p>
                                 </div>
-                                <p className="font-bold">${(item.price * item.quantity).toLocaleString('es-CL')}</p>
+                                <p className="font-bold dark:text-white">${(item.price * item.quantity).toLocaleString('es-CL')}</p>
                             </div>
                         ))}
 
                         <div className="pt-4 space-y-2">
-                            <div className="flex justify-between">
+                            <div className="flex justify-between dark:text-gray-200">
                                 <span>Subtotal:</span>
                                 <span className="font-bold">${total.toLocaleString('es-CL')}</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between dark:text-gray-200">
                                 <span>Envío:</span>
-                                <span className={shippingCost === 0 ? 'text-green-600 font-bold' : 'font-bold'}>
+                                <span className={shippingCost === 0 ? 'text-green-600 dark:text-green-400 font-bold' : 'font-bold'}>
                                     {shippingCost === 0 ? '¡GRATIS!' : `$${shippingCost.toLocaleString('es-CL')}`}
                                 </span>
                             </div>
-                            <div className="flex justify-between text-xl font-bold border-t pt-2">
-                                <span>Total:</span>
-                                <span className="text-blue-600">${finalTotal.toLocaleString('es-CL')}</span>
+                            <div className="flex justify-between text-xl font-bold border-t border-gray-200 dark:border-gray-700 pt-2">
+                                <span className="dark:text-white">Total:</span>
+                                <span className="text-blue-600 dark:text-blue-400">${finalTotal.toLocaleString('es-CL')}</span>
                             </div>
                         </div>
 
                         {total < 10000 && (
-                            <p className="text-sm text-gray-600 mt-4">
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
                                 💡 Agrega ${(10000 - total).toLocaleString('es-CL')} más para envío gratis
                             </p>
                         )}

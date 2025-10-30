@@ -3,9 +3,14 @@ export interface Product {
     name: string;
     description: string;
     price: number;
-    imageUrl?: string;
     category: string;
-    quantity: number; // ← Cambiado de opcional a requerido
+    imageUrl: string;
+    quantity: number;
+    created_at?: string; // ← AGREGAR ESTO
+}
+
+export interface CartItem extends Product {
+    quantity: number;
 }
 
 export interface Producto extends Product {
