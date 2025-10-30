@@ -19,7 +19,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
         toast.success(
             () => (
                 <div className="flex items-center gap-4">
-                    {/* Imagen del producto */}
                     <div className="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
                         {product.imageUrl ? (
                             <img 
@@ -34,7 +33,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
                         )}
                     </div>
                     
-                    {/* Info del producto */}
                     <div className="flex-1">
                         <p className="font-bold text-white mb-1">{product.name}</p>
                         <p className="text-sm text-green-100">✓ Agregado al carrito</p>
@@ -68,7 +66,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
         }
     };
 
-    // Verificar si el producto es nuevo (menos de 7 días)
     const isNew = () => {
         if (!product.created_at) return false;
         const createdDate = new Date(product.created_at);
@@ -78,28 +75,28 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
     };
 
     return (
-        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-xl transition-all duration-300 bg-white dark:bg-gray-800 transform hover:-translate-y-1 relative">
-            {/* Badge NUEVO */}
+        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-2 sm:p-4 hover:shadow-xl transition-all duration-300 bg-white dark:bg-gray-800 transform hover:-translate-y-1 relative">
+            {/* Badge NUEVO - Más pequeño en móvil */}
             {isNew() && (
-                <div className="absolute top-2 left-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-10 animate-pulse">
+                <div className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg z-10 animate-pulse">
                     🆕 NUEVO
                 </div>
             )}
 
-            {/* Botón de favoritos */}
+            {/* Botón de favoritos - Más pequeño en móvil */}
             <button
                 onClick={handleToggleFavorite}
-                className="absolute top-2 right-2 z-10 bg-white dark:bg-gray-700 w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300"
+                className="absolute top-1 right-1 sm:top-2 sm:right-2 z-10 bg-white dark:bg-gray-700 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300"
                 aria-label={favorited ? 'Quitar de favoritos' : 'Agregar a favoritos'}
             >
-                <span className="text-2xl">
+                <span className="text-lg sm:text-2xl">
                     {favorited ? '❤️' : '🤍'}
                 </span>
             </button>
 
-            {/* Imagen del producto */}
+            {/* Imagen del producto - Más pequeña en móvil */}
             <Link to={`/product/${product.id}`}>
-                <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4 overflow-hidden">
+                <div className="w-full h-32 sm:h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-2 sm:mb-4 overflow-hidden">
                     {product.imageUrl ? (
                         <img 
                             src={product.imageUrl} 
@@ -107,7 +104,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
                             className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
                         />
                     ) : (
-                        <div className="w-full h-full flex items-center justify-center text-6xl">
+                        <div className="w-full h-full flex items-center justify-center text-4xl sm:text-6xl">
                             📦
                         </div>
                     )}
@@ -116,40 +113,40 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
 
             {/* Información del producto */}
             <Link to={`/product/${product.id}`}>
-                <h3 className="text-xl font-bold mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition dark:text-white">
+                <h3 className="text-sm sm:text-xl font-bold mb-1 sm:mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition dark:text-white line-clamp-2">
                     {product.name}
                 </h3>
             </Link>
             
-            <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+            <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm mb-2 sm:mb-4 line-clamp-2 hidden sm:block">
                 {product.description || 'Sin descripción'}
             </p>
 
             {/* Precio y stock */}
-            <div className="mb-4">
-                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+            <div className="mb-2 sm:mb-4">
+                <p className="text-lg sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                     ${product.price.toLocaleString('es-CL')}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-[10px] sm:text-sm text-gray-500 dark:text-gray-400 mt-0.5 sm:mt-1">
                     {product.quantity > 0 ? (
-                        <span className="text-green-600 dark:text-green-400">✓ Stock disponible ({product.quantity})</span>
+                        <span className="text-green-600 dark:text-green-400">✓ Stock ({product.quantity})</span>
                     ) : (
                         <span className="text-red-600 dark:text-red-400">✗ Sin stock</span>
                     )}
                 </p>
             </div>
 
-            {/* Botón agregar al carrito */}
+            {/* Botón agregar al carrito - Más compacto en móvil */}
             <button 
                 onClick={handleAddToCart}
                 disabled={product.quantity === 0}
-                className={`w-full py-3 rounded-lg font-bold transition-all duration-300 ${
+                className={`w-full py-2 sm:py-3 rounded-lg font-bold text-xs sm:text-base transition-all duration-300 ${
                     product.quantity > 0
                         ? 'bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-700 hover:shadow-lg transform hover:scale-105'
                         : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
                 }`}
             >
-                {product.quantity > 0 ? '🛒 Agregar al carrito' : 'Sin stock'}
+                {product.quantity > 0 ? '🛒 Agregar' : 'Sin stock'}
             </button>
         </div>
     );
