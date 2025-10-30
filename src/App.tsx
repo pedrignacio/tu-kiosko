@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -12,7 +12,7 @@ import NotFound from './pages/NotFound';
 const App: React.FC = () => {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
         <Toaster 
           position="top-right"
           reverseOrder={false}
@@ -47,7 +47,6 @@ const App: React.FC = () => {
           <Route path="/product/:id" element={<><Header /><div className="flex-grow"><ProductDetail /></div><Footer /></>} />
           <Route path="/checkout" element={<><Header /><div className="flex-grow"><Checkout /></div><Footer /></>} />
           <Route path="/order-confirmation" element={<><Header /><div className="flex-grow"><OrderConfirmation /></div><Footer /></>} />
-          {/* 404 - Debe ser la última ruta */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
