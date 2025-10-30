@@ -6,9 +6,10 @@ import { useCart } from '../hooks/useCart';
 
 interface ProductListProps {
     category?: string;
+    searchTerm?: string;
 }
 
-const ProductList: React.FC<ProductListProps> = ({ category = 'all' }) => {
+const ProductList: React.FC<ProductListProps> = ({ category = 'all', searchTerm = '' }) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -17,9 +18,7 @@ const ProductList: React.FC<ProductListProps> = ({ category = 'all' }) => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                console.log('🔍 Intentando cargar productos...');
-                console.log('📍 Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
-                
+                setLoading(true);
                 let query = supabase.from('products').select('*');
                 
                 if (category !== 'all') {
@@ -27,8 +26,6 @@ const ProductList: React.FC<ProductListProps> = ({ category = 'all' }) => {
                 }
                 
                 const { data, error } = await query;
-                
-                console.log('📦 Respuesta de Supabase:', { data, error });
                 
                 if (error) {
                     console.error('❌ Error de Supabase:', error);
@@ -40,7 +37,6 @@ const ProductList: React.FC<ProductListProps> = ({ category = 'all' }) => {
                     quantity: p.quantity || 0
                 }));
                 
-                console.log('✅ Productos cargados:', productsWithQuantity);
                 setProducts(productsWithQuantity);
             } catch (error: any) {
                 console.error('❌ Error completo:', error);
@@ -53,9 +49,23 @@ const ProductList: React.FC<ProductListProps> = ({ category = 'all' }) => {
         fetchProducts();
     }, [category]);
 
+    // Filtra por búsqueda
+    const filteredProducts = products.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     if (loading) return (
-        <div className="text-center p-8">
-            <div className="text-xl">⏳ Cargando productos...</div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+                <div key={n} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 animate-pulse bg-white dark:bg-gray-800">
+                    <div className="w-full h-48 bg-gray-300 dark:bg-gray-700 rounded-lg mb-4"></div>
+                    <div className="h-6 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+                    <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full mb-4"></div>
+                    <div className="h-8 bg-gray-300 dark:bg-gray-700 rounded w-1/2 mb-4"></div>
+                    <div className="h-10 bg-gray-300 dark:bg-gray-700 rounded w-full"></div>
+                </div>
+            ))}
         </div>
     );
     
@@ -75,12 +85,17 @@ const ProductList: React.FC<ProductListProps> = ({ category = 'all' }) => {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
-            {products.length === 0 ? (
-                <p className="col-span-3 text-center text-gray-500 text-xl">
-                    📭 No hay productos en esta categoría
-                </p>
+            {filteredProducts.length === 0 ? (
+                <div className="col-span-3 text-center py-12">
+                    <p className="text-gray-500 text-2xl mb-2">📭 No se encontraron productos</p>
+                    {searchTerm && (
+                        <p className="text-gray-400">
+                            No hay resultados para "<strong>{searchTerm}</strong>"
+                        </p>
+                    )}
+                </div>
             ) : (
-                products.map(product => (
+                filteredProducts.map(product => (
                     <ProductCard 
                         key={product.id} 
                         product={product} 

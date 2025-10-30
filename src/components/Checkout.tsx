@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useCart } from '../hooks/useCart';
 
 const Checkout: React.FC = () => {
@@ -19,16 +20,47 @@ const Checkout: React.FC = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         
-        console.log('Pedido:', { formData, items, total: finalTotal });
+        // Validaciones
+        if (!formData.name.trim()) {
+            toast.error('El nombre es requerido');
+            return;
+        }
         
-        clearCart();
-        navigate('/order-confirmation', { 
-            state: { 
-                orderId: Date.now().toString(), 
-                totalAmount: finalTotal,
-                customerName: formData.name
-            } 
-        });
+        if (!formData.email.includes('@')) {
+            toast.error('Email inválido');
+            return;
+        }
+        
+        if (formData.phone.length < 9) {
+            toast.error('Teléfono inválido');
+            return;
+        }
+        
+        if (!formData.address.trim()) {
+            toast.error('La dirección es requerida');
+            return;
+        }
+        
+        // Mostrar notificación de procesamiento
+        const loadingToast = toast.loading('Procesando pedido...');
+        
+        // Simular procesamiento
+        setTimeout(() => {
+            toast.dismiss(loadingToast);
+            toast.success('¡Pedido confirmado!', {
+                duration: 4000,
+                icon: '🎉',
+            });
+            
+            clearCart();
+            navigate('/order-confirmation', { 
+                state: { 
+                    orderId: Date.now().toString(), 
+                    totalAmount: finalTotal,
+                    customerName: formData.name
+                } 
+            });
+        }, 1500);
     };
 
     if (items.length === 0) {
