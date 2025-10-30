@@ -3,6 +3,7 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail';
 import OrderConfirmation from './pages/OrderConfirmation';
@@ -49,6 +50,9 @@ const App: React.FC = () => {
           <Route path="/order-confirmation" element={<><Header /><div className="flex-grow"><OrderConfirmation /></div><Footer /></>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+
+        {/* Botón flotante scroll to top */}
+        <ScrollToTop />
       </div>
     </Router>
   );

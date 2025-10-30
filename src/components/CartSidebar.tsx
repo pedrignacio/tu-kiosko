@@ -60,16 +60,48 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
             />
             
             {/* Sidebar - Responsive */}
-            <div className="fixed right-0 top-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 flex flex-col transform transition-transform animate-slideInRight">
+            <div className="fixed right-0 top-0 h-full w-full sm:w-96 bg-white dark:bg-gray-800 shadow-2xl z-50 flex flex-col transform transition-transform animate-slideInRight">
                 {/* Header */}
-                <div className="p-4 sm:p-6 border-b flex justify-between items-center bg-gray-50">
-                    <h2 className="text-xl sm:text-2xl font-bold">🛒 Carrito</h2>
-                    <button 
-                        onClick={onClose}
-                        className="text-gray-500 hover:text-gray-700 text-3xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 transition"
-                    >
-                        ✕
-                    </button>
+                <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl sm:text-2xl font-bold dark:text-white">🛒 Carrito</h2>
+                        <button 
+                            onClick={onClose}
+                            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-3xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                        >
+                            ✕
+                        </button>
+                    </div>
+
+                    {/* Barra de progreso envío gratis */}
+                    {items.length > 0 && (
+                        <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-3">
+                            {total >= 10000 ? (
+                                <div className="text-center">
+                                    <p className="text-green-600 dark:text-green-400 font-bold flex items-center justify-center gap-2">
+                                        <span className="text-xl">✅</span>
+                                        ¡Envío GRATIS desbloqueado!
+                                    </p>
+                                </div>
+                            ) : (
+                                <>
+                                    <p className="text-sm text-blue-800 dark:text-blue-200 mb-2 font-semibold">
+                                        🚚 Te faltan ${(10000 - total).toLocaleString('es-CL')} para envío gratis
+                                    </p>
+                                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                                        {/* eslint-disable-next-line react/forbid-dom-props */}
+                                        <div 
+                                            className="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-500 ease-out"
+                                            style={{ width: `${Math.min((total / 10000) * 100, 100)}%` }}
+                                        />
+                                    </div>
+                                    <p className="text-xs text-blue-700 dark:text-blue-300 mt-1 text-right">
+                                        {Math.round((total / 10000) * 100)}% completado
+                                    </p>
+                                </>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 {/* Content */}

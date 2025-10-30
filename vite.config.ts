@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/tu-kiosko/', // ← AGREGAR ESTO (nombre de tu repo)
+  base: '/tu-kiosko/', // ← Debe estar exactamente así
   server: {
     port: 3000
   },

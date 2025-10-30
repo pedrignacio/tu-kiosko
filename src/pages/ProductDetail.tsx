@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { supabase } from '../services/supabase';
 import { Product } from '../types';
 import { useCart } from '../hooks/useCart';
+import ProductCard from '../components/ProductCard';
 
 const ProductDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -13,6 +14,7 @@ const ProductDetail: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [quantity, setQuantity] = useState<number>(1);
     const [selectedImage, setSelectedImage] = useState<number>(0);
+    const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
 
     const productImages = [
         product?.imageUrl || 'https://via.placeholder.com/600x400?text=Producto',
@@ -34,6 +36,17 @@ const ProductDetail: React.FC = () => {
 
                 if (error) throw error;
                 setProduct(data);
+
+                if (data) {
+                    const { data: related } = await supabase
+                        .from('products')
+                        .select('*')
+                        .eq('category', data.category)
+                        .neq('id', id)
+                        .limit(4);
+                    
+                    if (related) setRelatedProducts(related);
+                }
             } catch (error) {
                 console.error('Error al cargar producto:', error);
                 toast.error('No se pudo cargar el producto');
@@ -76,11 +89,11 @@ const ProductDetail: React.FC = () => {
             <div className="container mx-auto p-6">
                 <div className="animate-pulse">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="bg-gray-200 h-96 rounded-lg"></div>
+                        <div className="bg-gray-200 dark:bg-gray-700 h-96 rounded-lg"></div>
                         <div className="space-y-4">
-                            <div className="h-8 bg-gray-200 rounded w-3/4"></div>
-                            <div className="h-6 bg-gray-200 rounded w-1/2"></div>
-                            <div className="h-32 bg-gray-200 rounded"></div>
+                            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                            <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
                         </div>
                     </div>
                 </div>
@@ -91,7 +104,7 @@ const ProductDetail: React.FC = () => {
     if (!product) {
         return (
             <div className="container mx-auto p-6 text-center">
-                <h1 className="text-3xl font-bold mb-4">Producto no encontrado</h1>
+                <h1 className="text-3xl font-bold mb-4 dark:text-white">Producto no encontrado</h1>
                 <button 
                     onClick={() => navigate('/')}
                     className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600"
@@ -255,10 +268,22 @@ const ProductDetail: React.FC = () => {
                 </div>
             </div>
 
-            <div className="mt-16">
-                <h2 className="text-3xl font-bold mb-6">Productos relacionados</h2>
-                <p className="text-gray-500">Próximamente...</p>
-            </div>
+            {relatedProducts.length > 0 && (
+                <div className="mt-16 animate-fadeIn">
+                    <h2 className="text-3xl font-bold mb-6 dark:text-white">
+                        🔗 Productos relacionados
+                    </h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                        {relatedProducts.map(p => (
+                            <ProductCard 
+                                key={p.id} 
+                                product={p} 
+                                onAddToCart={addItem}
+                            />
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
